@@ -1,0 +1,55 @@
+{
+  "name": "Demo Level 3",
+  "description": "Demo level 3 with progressive difficulty",
+  "bpm": 150,
+  "duration": 45000,
+  "audioFile": "demo-track.ogg",
+  "patterns": [
+    {
+      "beat": 1,
+      "platform": 1,
+      "type": "obstacle"
+    },
+    {
+      "beat": 3,
+      "platform": 0,
+      "type": "obstacle"
+    },
+    {
+      "beat": 5,
+      "platform": 2,
+      "type": "obstacle"
+    },
+    {
+      "beat": 7,
+      "platform": 1,
+      "type": "obstacle"
+    },
+    {
+      "beat": 9,
+      "platform": 0,
+      "type": "obstacle"
+    },
+    {
+      "beat": 11,
+      "platform": 2,
+      "type": "obstacle"
+    },
+    {
+      "beat": 13,
+      "platform": 1,
+      "type": "obstacle"
+    },
+    {
+      "beat": 15,
+      "platform": 0,
+      "type": "obstacle"
+    }
+  ],
+  "metadata": {
+    "difficulty": "medium",
+    "genre": "electronic",
+    "creator": "Rhythm Runner Team",
+    "version": "1.0"
+  }
+}
