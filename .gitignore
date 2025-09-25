@@ -9,6 +9,10 @@ dist/
 build/
 *.tsbuildinfo
 
+# Deployment directories
+gh-pages/
+gh-pages-existing/
+
 # Environment variables
 .env
 .env.local

@@ -19,7 +19,10 @@
     "android:dev": "npm run capacitor:build && npx cap open android",
     "ios:dev": "npm run capacitor:build && npx cap open ios",
     "prepare": "husky install",
-    "pre-commit": "make pre-commit"
+    "pre-commit": "make pre-commit",
+    "deploy:prepare": "node scripts/prepare-deployment.js",
+    "deploy:index": "node scripts/generate-branch-index.js",
+    "deploy:local": "npm run build && npm run deploy:prepare"
   },
   "keywords": [
     "game",

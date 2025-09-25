@@ -39,7 +39,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: dist-files
+        name: dist-files-${{ github.sha }}
         path: dist/
         retention-days: 7
 
@@ -47,7 +47,13 @@ jobs:
     name: Deploy to GitHub Pages
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # Deploy all branches and PRs (not just main)
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     
     steps:
     - name: Checkout code
@@ -67,11 +73,41 @@ jobs:
       env:
         NODE_ENV: production
     
+    - name: Checkout gh-pages branch for multi-branch structure
+      uses: actions/checkout@v4
+      with:
+        ref: gh-pages
+        path: gh-pages-existing
+        token: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
+    
+    - name: Prepare multi-branch deployment
+      env:
+        GITHUB_REF_NAME: ${{ github.ref_name }}
+        GITHUB_EVENT_NAME: ${{ github.event_name }}
+        GITHUB_SHA: ${{ github.sha }}
+        GITHUB_PR_NUMBER: ${{ github.event.number }}
+      run: |
+        # Create gh-pages directory structure
+        mkdir -p gh-pages
+        
+        # Copy existing deployments if they exist
+        if [ -d "gh-pages-existing" ]; then
+          echo "Copying existing deployments..."
+          cp -r gh-pages-existing/* gh-pages/ 2>/dev/null || true
+          # Remove old .git directory to avoid conflicts
+          rm -rf gh-pages/.git
+        fi
+        
+        # Run deployment preparation script
+        node scripts/prepare-deployment.js
+    
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
+        publish_dir: ./gh-pages
+        keep_files: true
         # cname: rhythm-runner.example.com # Uncomment and update with your domain
 
   build-mobile:
