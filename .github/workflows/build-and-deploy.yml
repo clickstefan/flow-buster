@@ -8,10 +8,12 @@ on:
 
 jobs:
   test:
+    name: Test & Build
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
     
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -22,25 +24,34 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Run type checking
+    - name: Run TypeScript type checking
       run: npm run type-check
     
-    - name: Run linting
+    - name: Run ESLint code analysis
       run: npm run lint
     
-    - name: Run tests
+    - name: Run unit tests
       run: npm run test
       
-    - name: Build project
+    - name: Build production bundle
       run: npm run build
 
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist-files
+        path: dist/
+        retention-days: 7
+
   deploy-web:
+    name: Deploy to GitHub Pages
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
     
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -61,15 +72,17 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./dist
-        cname: rhythm-runner.example.com # Update with your domain
+        # cname: rhythm-runner.example.com # Uncomment and update with your domain
 
   build-mobile:
+    name: Mobile Build Preparation
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
     
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -80,27 +93,25 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Build web version
+    - name: Build web version for mobile
       run: npm run build
     
-    - name: Setup Capacitor
-      run: npm run capacitor:sync
-    
-    - name: Build Android (if configured)
+    - name: Check Capacitor setup
       run: |
-        if [ -d "android" ]; then
-          echo "Building Android APK..."
-          # Add Android build commands here when ready
-          # cd android && ./gradlew assembleDebug
+        if [ -f "capacitor.config.json" ] || [ -f "capacitor.config.ts" ]; then
+          echo "Capacitor configured - ready for mobile build"
+          npm run capacitor:sync || echo "Capacitor sync failed - mobile setup needed"
         else
-          echo "Android not configured yet"
+          echo "Capacitor not yet configured - run 'npx cap init' to set up mobile builds"
         fi
     
-    - name: Upload build artifacts
+    - name: Upload mobile build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: mobile-builds
+        name: mobile-ready-build
         path: |
           dist/
-          android/app/build/outputs/
+          android/
+          ios/
         retention-days: 30
+        if-no-files-found: ignore

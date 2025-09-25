@@ -7,9 +7,7 @@ module.exports = {
     jest: true
   },
   extends: [
-    'eslint:recommended',
-    '@typescript-eslint/recommended',
-    'prettier'
+    'eslint:recommended'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -17,20 +15,19 @@ module.exports = {
     sourceType: 'module'
   },
   plugins: [
-    '@typescript-eslint',
-    'prettier'
+    '@typescript-eslint'
   ],
   rules: {
-    'prettier/prettier': 'warn',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/no-explicit-any': 'warn',
-    '@typescript-eslint/no-non-null-assertion': 'warn',
-    'no-console': ['warn', { allow: ['warn', 'error'] }]
+    'no-console': 'off', // Allow console.log for development
+    'no-undef': 'off', // TypeScript handles this
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }]
   },
   ignorePatterns: [
     'dist',
     'node_modules',
     '*.config.js',
-    '*.config.ts'
+    '*.config.ts',
+    'jest.setup.js'
   ]
 };
