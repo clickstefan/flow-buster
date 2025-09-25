@@ -79,10 +79,26 @@ jobs:
         NODE_ENV: production
         GITHUB_REF_NAME: ${{ env.BRANCH_NAME }}
     
-    - name: Create branch-specific directory
+    - name: Create deployment structure
       run: |
-        mkdir -p deploy/${{ env.BRANCH_NAME }}
-        cp -r dist/* deploy/${{ env.BRANCH_NAME }}/
+        mkdir -p deploy
+        
+        # Copy branch-specific build to its subfolder
+        mkdir -p "deploy/${{ env.BRANCH_NAME }}"
+        cp -r dist/* "deploy/${{ env.BRANCH_NAME }}/"
+        
+        # Create/update root index page with branch links
+        cp branch-index.html deploy/index.html
+        
+        echo "📁 Deployment structure created:"
+        echo "├── index.html (branch listing)"
+        echo "└── ${{ env.BRANCH_NAME }}/ (branch deployment)"
+        
+        # Show deployed URLs
+        echo ""
+        echo "🔗 Deployment URLs:"
+        echo "Branch Index: https://clickstefan.github.io/flow-buster/"
+        echo "Current Branch: https://clickstefan.github.io/flow-buster/${{ env.BRANCH_NAME }}/"
     
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
@@ -92,6 +108,29 @@ jobs:
         keep_files: true  # Keep other branch deployments
         destination_dir: ./
         # cname: rhythm-runner.example.com # Uncomment and update with your domain
+    
+    - name: Comment deployment URLs
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const branchName = '${{ env.BRANCH_NAME }}';
+          const comment = `## 🚀 Branch Deployment Ready!
+
+          Your branch has been automatically deployed to GitHub Pages:
+
+          **🔗 Branch URL:** https://clickstefan.github.io/flow-buster/${branchName}/
+
+          **📋 All Deployments:** https://clickstefan.github.io/flow-buster/
+
+          Changes will be automatically updated when you push new commits to this branch.`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
 
   build-mobile:
     name: Mobile Build Preparation
