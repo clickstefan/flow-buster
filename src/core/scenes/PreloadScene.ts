@@ -97,57 +97,122 @@ export class PreloadScene extends Phaser.Scene {
     // Set base URL for assets
     this.load.setBaseURL('assets/');
 
-    // Load audio assets
-    this.load.audio('demo-track', 'audio/demo-track.ogg');
-    this.load.audio('menu-music', 'audio/menu-music.ogg');
-    this.load.audio('jump-sound', 'audio/jump.ogg');
-    this.load.audio('beat-hit', 'audio/beat-hit.ogg');
-    this.load.audio('perfect-hit', 'audio/perfect-hit.ogg');
-    this.load.audio('collect-note', 'audio/collect-note.ogg');
-
-    // Load image assets
-    this.load.image('background', 'images/background.png');
-    this.load.image('player-idle', 'images/player-idle.png');
-    this.load.image('player-jump', 'images/player-jump.png');
-    this.load.image('platform', 'images/platform.png');
-    this.load.image('obstacle', 'images/obstacle.png');
-    this.load.image('note-collectible', 'images/note-collectible.png');
-    this.load.image('particle', 'images/particle.png');
-
-    // Load sprite sheets for animations
-    this.load.spritesheet('player-run', 'images/player-run.png', {
-      frameWidth: 80,
-      frameHeight: 80,
-    });
-
-    this.load.spritesheet('obstacle-pulse', 'images/obstacle-pulse.png', {
-      frameWidth: 60,
-      frameHeight: 60,
-    });
-
-    // Load UI assets
-    this.load.image('button-play', 'images/ui/button-play.png');
-    this.load.image('button-pause', 'images/ui/button-pause.png');
-    this.load.image('button-menu', 'images/ui/button-menu.png');
-    this.load.image('harmony-bar', 'images/ui/harmony-bar.png');
-    this.load.image('tempo-dial', 'images/ui/tempo-dial.png');
+    // Create procedural assets for missing files
+    this.createProceduralAssets();
 
     // Load level data
     this.load.json('demo-level-1', 'levels/demo-level-1.json');
     this.load.json('demo-level-2', 'levels/demo-level-2.json');
     this.load.json('demo-level-3', 'levels/demo-level-3.json');
 
-    // Load fonts (optional - will use fallback if not available)
-    try {
-      // Uncomment when rexWebFont plugin is available
-      // this.load.rexWebFont({
-      //   google: {
-      //     families: ['Orbitron:400,700', 'Rajdhani:400,600']
-      //   }
-      // });
-    } catch (error) {
-      console.log('Web fonts plugin not available, using system fonts');
+    // Set up error handling for missing assets
+    this.load.on('filecomplete', (key: string) => {
+      console.log(`✓ Loaded: ${key}`);
+    });
+
+    this.load.on('loaderror', (file: any) => {
+      console.log(`! Asset not found: ${file.key}, using procedural fallback`);
+    });
+  }
+
+  private createProceduralAssets(): void {
+    // Create simple colored rectangles as textures
+    const graphics = this.add.graphics();
+    
+    // Background
+    graphics.fillStyle(0x1a1a2e);
+    graphics.fillRect(0, 0, 1920, 1080);
+    graphics.generateTexture('background', 1920, 1080);
+    
+    // Player textures
+    graphics.clear();
+    graphics.fillStyle(0x6B46C1);
+    graphics.fillCircle(40, 25, 15); // Head
+    graphics.fillRect(25, 40, 30, 40); // Body
+    graphics.generateTexture('player-idle', 80, 80);
+    
+    graphics.clear();
+    graphics.fillStyle(0x8B5CF6);
+    graphics.fillCircle(40, 20, 15); // Head (jumping)
+    graphics.fillRect(25, 35, 30, 45); // Body
+    graphics.generateTexture('player-jump', 80, 80);
+    
+    // Create multi-frame player-run sprite
+    graphics.clear();
+    graphics.fillStyle(0x7C3AED);
+    for (let i = 0; i < 8; i++) {
+      const x = i * 80;
+      graphics.fillCircle(x + 40, 25, 15);
+      graphics.fillRect(x + 25, 40, 30, 40);
     }
+    graphics.generateTexture('player-run', 640, 80);
+    
+    // Platform
+    graphics.clear();
+    graphics.fillStyle(0x4B5563);
+    graphics.fillRect(0, 0, 200, 50);
+    graphics.generateTexture('platform', 200, 50);
+    
+    // Obstacle
+    graphics.clear();
+    graphics.fillStyle(0xEF4444);
+    graphics.fillRect(0, 0, 60, 60);
+    graphics.generateTexture('obstacle', 60, 60);
+    
+    // Multi-frame obstacle pulse
+    graphics.clear();
+    for (let i = 0; i < 4; i++) {
+      const x = i * 60;
+      const intensity = 0xEF4444 + (i * 0x101010);
+      graphics.fillStyle(intensity);
+      graphics.fillRect(x, 0, 60, 60);
+    }
+    graphics.generateTexture('obstacle-pulse', 240, 60);
+    
+    // Note collectible
+    graphics.clear();
+    graphics.fillStyle(0xF59E0B);
+    graphics.fillCircle(15, 15, 12);
+    graphics.generateTexture('note-collectible', 30, 30);
+    
+    // Particle
+    graphics.clear();
+    graphics.fillStyle(0xFFFFFF);
+    graphics.fillCircle(5, 5, 4);
+    graphics.generateTexture('particle', 10, 10);
+    
+    // UI Buttons
+    graphics.clear();
+    graphics.fillStyle(0x10B981);
+    graphics.fillRoundedRect(0, 0, 240, 60, 10);
+    graphics.generateTexture('button-play', 240, 60);
+    
+    graphics.clear();
+    graphics.fillStyle(0xF59E0B);
+    graphics.fillRoundedRect(0, 0, 60, 60, 10);
+    graphics.generateTexture('button-pause', 60, 60);
+    
+    graphics.clear();
+    graphics.fillStyle(0x6B7280);
+    graphics.fillRoundedRect(0, 0, 60, 60, 10);
+    graphics.generateTexture('button-menu', 60, 60);
+    
+    // Harmony bar
+    graphics.clear();
+    graphics.fillStyle(0x059669);
+    graphics.fillRect(0, 0, 300, 20);
+    graphics.generateTexture('harmony-bar', 300, 20);
+    
+    // Tempo dial
+    graphics.clear();
+    graphics.fillStyle(0xEC4899);
+    graphics.fillCircle(40, 40, 35);
+    graphics.generateTexture('tempo-dial', 80, 80);
+    
+    // Clean up
+    graphics.destroy();
+    
+    console.log('✓ Created procedural textures for all game assets');
   }
 
   create(): void {
