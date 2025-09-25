@@ -25,6 +25,7 @@ help:
 	@echo "  make type-check  - Run TypeScript type checking"
 	@echo "  make lint        - Run ESLint code analysis"
 	@echo "  make test        - Run Jest unit tests"
+	@echo "  make test-deployment - Test deployment links and check for JS errors"
 	@echo "  make build       - Build production bundle"
 	@echo "  make format      - Format code with Prettier"
 	@echo ""
@@ -73,6 +74,12 @@ test:
 	@echo "🧪 Running unit tests..."
 	npm run test
 	@echo "✅ All tests passed!"
+
+# Test deployment links and JavaScript errors
+test-deployment:
+	@echo "🔗 Testing deployment links..."
+	npm run test:deployment
+	@echo "✅ Deployment tests completed!"
 
 # Build production bundle
 build:

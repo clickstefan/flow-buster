@@ -62,6 +62,7 @@ temp/
 # Testing artifacts
 deploy-test/
 test-deployment.sh
+deployment-test-report.json
 
 # Game-specific ignores
 public/assets/audio/*.mp3

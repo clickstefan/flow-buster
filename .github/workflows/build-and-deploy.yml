@@ -109,6 +109,18 @@ jobs:
         destination_dir: ./
         # cname: rhythm-runner.example.com # Uncomment and update with your domain
     
+    - name: Wait for deployment to propagate
+      run: |
+        echo "⏳ Waiting for GitHub Pages deployment to propagate..."
+        sleep 60
+    
+    - name: Test deployment links
+      run: |
+        echo "🔗 Testing deployment links..."
+        npm run test:deployment
+      env:
+        BRANCH_NAME: ${{ env.BRANCH_NAME }}
+    
     - name: Comment deployment URLs
       if: github.event_name == 'pull_request'
       uses: actions/github-script@v7
