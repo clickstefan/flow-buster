@@ -3,17 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rhythm Runner - Musical Adventure</title>
-    <meta name="description" content="Navigate a magical world corrupted by discord using musical timing and tempo manipulation">
-    
-    <!-- PWA Meta -->
-    <meta name="theme-color" content="#6B46C1">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="icon" type="image/svg+xml" href="./icon.svg">
-    
-    <!-- Preload critical assets -->
-    <link rel="preload" href="/assets/audio/demo-track.ogg" as="audio" type="audio/ogg">
-    
+    <title>Flow Buster - Branch Deployments</title>
     <style>
         * {
             margin: 0;
@@ -24,80 +14,215 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            overflow: hidden;
-            touch-action: none;
-            user-select: none;
+            min-height: 100vh;
+            color: white;
+            padding: 2rem;
         }
         
-        #game-container {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .branches {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .branch-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .branch-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .branch-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #FFD700;
+        }
+        
+        .branch-card p {
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+        
+        .branch-card a {
+            display: inline-block;
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .branch-card a:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .info h3 {
+            margin-bottom: 1rem;
+            color: #FFD700;
+        }
+        
+        .info ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .info li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
             position: relative;
         }
         
-        #loading {
+        .info li::before {
+            content: "→";
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 600;
-            z-index: 1000;
-            text-align: center;
+            left: 0;
+            color: #10B981;
+            font-weight: bold;
         }
         
-        .loading-spinner {
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
             width: 40px;
             height: 40px;
             border: 3px solid rgba(255, 255, 255, 0.3);
             border-top: 3px solid white;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: 0 auto 1rem;
         }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        canvas {
-            max-width: 100vw;
-            max-height: 100vh;
-            border-radius: 8px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            body {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            }
-            
-            canvas {
-                border-radius: 0;
-                box-shadow: none;
-            }
-        }
-        
-        /* Hide scrollbars on mobile */
-        ::-webkit-scrollbar {
-            display: none;
-        }
     </style>
-  <script type="module" crossorigin src="./assets/main-DXw0Ic-f.js"></script>
 </head>
 <body>
-    <div id="game-container">
-        <div id="loading">
-            <div class="loading-spinner"></div>
-            <p>Loading Rhythm Runner...</p>
-            <small>Preparing your musical adventure</small>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Flow Buster</h1>
+            <p>Branch Deployments - Multiple versions for testing and development</p>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading branch deployments...</p>
+        </div>
+        
+        <div id="content" style="display: none;">
+            <div class="branches" id="branches">
+                <!-- Branches will be populated by JavaScript -->
+            </div>
+            
+            <div class="info">
+                <h3>📋 About Branch Deployments</h3>
+                <ul>
+                    <li><strong>Automatic Deployment:</strong> Each branch and PR gets its own URL</li>
+                    <li><strong>Live Updates:</strong> Changes are deployed automatically when you push</li>
+                    <li><strong>Isolated Testing:</strong> Test different features without conflicts</li>
+                    <li><strong>Easy Sharing:</strong> Share branch-specific URLs with your team</li>
+                </ul>
+            </div>
         </div>
     </div>
+
+    <script>
+        // Common branches that might exist
+        const commonBranches = [
+            {
+                name: 'main',
+                description: 'Production-ready stable version',
+                path: '/main/'
+            },
+            {
+                name: 'develop',
+                description: 'Latest development version with new features',
+                path: '/develop/'
+            }
+        ];
+
+        // Get current branch from URL or detect available branches
+        const currentBranch = 'copilot/fix-4607815f-b5a8-44ee-9dd9-d94f6b951b53';
+        
+        function createBranchCard(branch) {
+            return `
+                <div class="branch-card">
+                    <h3>${branch.name}</h3>
+                    <p>${branch.description}</p>
+                    <a href="${branch.path}" target="_blank">Open ${branch.name} ↗</a>
+                </div>
+            `;
+        }
+        
+        function loadBranches() {
+            const branchesContainer = document.getElementById('branches');
+            
+            // Add the current branch first
+            if (currentBranch) {
+                const currentBranchCard = {
+                    name: currentBranch.split('/').pop() || currentBranch,
+                    description: 'Current branch with branch-based deployment implementation',
+                    path: `/${currentBranch}/`
+                };
+                branchesContainer.innerHTML += createBranchCard(currentBranchCard);
+            }
+            
+            // Add common branches
+            commonBranches.forEach(branch => {
+                branchesContainer.innerHTML += createBranchCard(branch);
+            });
+            
+            // Hide loading and show content
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        }
+        
+        // Load branches after a short delay to show loading animation
+        setTimeout(loadBranches, 1000);
+    </script>
 </body>
 </html>
