@@ -1,0 +1,55 @@
+{
+  "name": "Demo Level 1",
+  "description": "Introduction level with basic rhythm patterns",
+  "bpm": 120,
+  "duration": 60000,
+  "audioFile": "demo-track.ogg",
+  "patterns": [
+    {
+      "beat": 1,
+      "platform": 0,
+      "type": "obstacle"
+    },
+    {
+      "beat": 3,
+      "platform": 1,
+      "type": "obstacle"
+    },
+    {
+      "beat": 5,
+      "platform": 2,
+      "type": "obstacle"
+    },
+    {
+      "beat": 7,
+      "platform": 0,
+      "type": "obstacle"
+    },
+    {
+      "beat": 9,
+      "platform": 1,
+      "type": "collectible"
+    },
+    {
+      "beat": 11,
+      "platform": 2,
+      "type": "obstacle"
+    },
+    {
+      "beat": 13,
+      "platform": 0,
+      "type": "obstacle"
+    },
+    {
+      "beat": 15,
+      "platform": 1,
+      "type": "obstacle"
+    }
+  ],
+  "metadata": {
+    "difficulty": "easy",
+    "genre": "electronic",
+    "creator": "Rhythm Runner Team",
+    "version": "1.0"
+  }
+}

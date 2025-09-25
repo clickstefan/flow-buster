@@ -1,0 +1,55 @@
+{
+  "name": "Demo Level 2",
+  "description": "Demo level 2 with progressive difficulty",
+  "bpm": 140,
+  "duration": 45000,
+  "audioFile": "demo-track.ogg",
+  "patterns": [
+    {
+      "beat": 1,
+      "platform": 0,
+      "type": "obstacle"
+    },
+    {
+      "beat": 3,
+      "platform": 2,
+      "type": "obstacle"
+    },
+    {
+      "beat": 5,
+      "platform": 1,
+      "type": "obstacle"
+    },
+    {
+      "beat": 7,
+      "platform": 0,
+      "type": "obstacle"
+    },
+    {
+      "beat": 9,
+      "platform": 2,
+      "type": "obstacle"
+    },
+    {
+      "beat": 11,
+      "platform": 1,
+      "type": "obstacle"
+    },
+    {
+      "beat": 13,
+      "platform": 0,
+      "type": "obstacle"
+    },
+    {
+      "beat": 15,
+      "platform": 2,
+      "type": "obstacle"
+    }
+  ],
+  "metadata": {
+    "difficulty": "easy",
+    "genre": "electronic",
+    "creator": "Rhythm Runner Team",
+    "version": "1.0"
+  }
+}

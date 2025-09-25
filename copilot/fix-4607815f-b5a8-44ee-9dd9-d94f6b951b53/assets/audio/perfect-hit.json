@@ -1,0 +1,8 @@
+{
+  "type": "placeholder",
+  "duration": 0.2,
+  "frequency": 1200,
+  "format": "sine_wave",
+  "sample_rate": 44100,
+  "channels": 1
+}
