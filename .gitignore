@@ -59,6 +59,10 @@ tmp/
 temp/
 .tmp/
 
+# Testing artifacts
+deploy-test/
+test-deployment.sh
+
 # Game-specific ignores
 public/assets/audio/*.mp3
 public/assets/audio/*.ogg
