@@ -1,5 +1,24 @@
 # Rhythm Runner - Musical Adventure Game Development Brief
 
+## 🚀 Quick Start for Developers
+
+**Ready to contribute? Start here:**
+
+```bash
+# 1. Install dependencies
+make install
+
+# 2. Start development server  
+make dev
+
+# 3. Before ANY commit, run the CI pipeline
+make ci
+```
+
+📖 **[Full Development Guide →](docs/DEVELOPMENT.md)** - Required reading for all contributors
+
+---
+
 ## Game Overview
 Create a rhythm-based endless runner game where players navigate a magical world corrupted by discord, using musical timing and tempo manipulation to overcome obstacles and restore harmony.
 

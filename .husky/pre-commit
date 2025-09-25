@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run the complete CI pipeline before commits
+echo "🚀 Running pre-commit checks..."
+make pre-commit

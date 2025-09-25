@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6B7280;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6B7280;stop-opacity:0.7" />
+    </linearGradient>
+  </defs>
+  <rect x="5" y="5" width="50" height="50" rx="10" ry="10" fill="url(#grad)"/>
+  <text x="30" y="35" text-anchor="middle" fill="white" font-family="Arial" font-size="14" font-weight="bold">PLAY</text>
+</svg>
