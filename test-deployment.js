@@ -209,7 +209,8 @@ async function getCurrentBranch() {
 }
 
 async function main() {
-  const branchName = process.argv[2] || await getCurrentBranch();
+  // Use BRANCH_NAME environment variable (set by GitHub Actions) or command line arg or current branch
+  const branchName = process.env.BRANCH_NAME || process.argv[2] || await getCurrentBranch();
   console.log(`🎯 Testing deployment for branch: ${branchName}`);
 
   const tester = new DeploymentTester();
