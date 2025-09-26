@@ -223,21 +223,21 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   private createAnimations(): void {
-    // Player running animation
+    // Player running animation - use existing texture as single frame animation
     if (!this.anims.exists('player-run')) {
       this.anims.create({
         key: 'player-run',
-        frames: this.anims.generateFrameNumbers('player-run', { start: 0, end: 7 }),
+        frames: [{ key: 'player-run', frame: 0 }],
         frameRate: 12,
         repeat: -1,
       });
     }
 
-    // Obstacle pulsing animation
+    // Obstacle pulsing animation - use existing texture as single frame animation
     if (!this.anims.exists('obstacle-pulse')) {
       this.anims.create({
         key: 'obstacle-pulse',
-        frames: this.anims.generateFrameNumbers('obstacle-pulse', { start: 0, end: 3 }),
+        frames: [{ key: 'obstacle-pulse', frame: 0 }],
         frameRate: 8,
         repeat: -1,
       });
