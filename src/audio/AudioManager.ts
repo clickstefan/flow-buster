@@ -89,25 +89,41 @@ export class AudioManager extends Phaser.Events.EventEmitter {
   }
 
   private setupMeyda(): void {
-    // Get the Tone.js audio context
-    this.audioContext = Tone.getContext().rawContext as AudioContext;
-    
-    // Create analyzer for beat detection
-    this.meydaAnalyzer = Meyda.createMeydaAnalyzer({
-      audioContext: this.audioContext,
-      source: this.analyzer.context.rawContext.createAnalyser(), // Will be connected later
-      bufferSize: GameConfig.AUDIO_BUFFER_SIZE,
-      featureExtractors: [
-        'rms',
-        'spectralCentroid', 
-        'spectralRolloff',
-        'spectralFlux',
-        'loudness'
-      ]
-    });
+    try {
+      // Get the Tone.js audio context
+      this.audioContext = Tone.getContext().rawContext as AudioContext;
 
-    // Set up real-time analysis
-    this.meydaAnalyzer.start();
+      // Create analyzer for beat detection using Web Audio API
+      const analyserNode = this.audioContext.createAnalyser();
+      analyserNode.fftSize = GameConfig.AUDIO_BUFFER_SIZE;
+      analyserNode.smoothingTimeConstant = 0.8;
+
+      // Connect to the Tone.js analyzer
+      if (this.analyzer && this.analyzer.context.rawContext) {
+        this.analyzer.connect(analyserNode);
+      }
+
+      // Create Meyda analyzer with modern approach
+      this.meydaAnalyzer = Meyda.createMeydaAnalyzer({
+        audioContext: this.audioContext,
+        source: analyserNode,
+        bufferSize: GameConfig.AUDIO_BUFFER_SIZE,
+        featureExtractors: [
+          'rms',
+          'spectralCentroid',
+          'spectralRolloff',
+          'spectralFlux',
+          'loudness'
+        ]
+      });
+
+      // Set up real-time analysis
+      this.meydaAnalyzer.start();
+      console.log('AudioManager: Meyda analyzer initialized successfully');
+    } catch (error) {
+      console.warn('AudioManager: Meyda analyzer failed to initialize, continuing without audio analysis:', error);
+      // Continue without Meyda analyzer - the game will work without beat detection
+    }
   }
 
   public async loadTrack(trackKey: string): Promise<void> {

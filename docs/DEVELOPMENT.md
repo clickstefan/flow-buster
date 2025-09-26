@@ -46,18 +46,32 @@ git add .
 git commit -m "Your commit message"
 ```
 
+### Post-Deployment Validation
+```bash
+# After pushing changes, wait for GitHub Pages deployment
+# Then test that deployment links are working
+make test-deployment
+
+# This will:
+# 1. Check that https://clickstefan.github.io/flow-buster/ loads
+# 2. Check that your branch URL loads correctly  
+# 3. Validate no JavaScript errors occur
+# 4. Confirm all expected page elements are present
+```
+
 ### Available Commands
 ```bash
-make help          # Show all available commands
-make install       # Install dependencies
-make dev           # Start development server
-make ci            # Run complete CI pipeline (REQUIRED)
-make test          # Run unit tests only
-make lint          # Run ESLint only
-make type-check    # Run TypeScript checking only
-make build         # Build production bundle
-make format        # Format code with Prettier
-make clean         # Clean all build artifacts
+make help              # Show all available commands
+make install           # Install dependencies
+make dev               # Start development server
+make ci                # Run complete CI pipeline (REQUIRED)
+make test              # Run unit tests only
+make test-deployment   # Test deployment links and check for JS errors
+make lint              # Run ESLint only
+make type-check        # Run TypeScript checking only
+make build             # Build production bundle
+make format            # Format code with Prettier
+make clean             # Clean all build artifacts
 ```
 
 ---
@@ -87,6 +101,49 @@ The repository has a pre-commit hook that automatically runs `make ci`. If it fa
 ```bash
 git commit --no-verify -m "Emergency commit message"
 ```
+
+---
+
+## 🚀 Branch Deployment Testing
+
+### Overview
+This project uses automatic branch-based deployment where each branch gets its own URL:
+- **Root**: https://clickstefan.github.io/flow-buster/ (branch index)
+- **Main**: https://clickstefan.github.io/flow-buster/main/
+- **Your Branch**: https://clickstefan.github.io/flow-buster/your-branch-name/
+
+### Testing Deployment
+```bash
+# Test your current branch deployment
+make test-deployment
+
+# Test a specific branch
+npm run test:deployment your-branch-name
+```
+
+### What the Test Checks
+1. **Root Index Page**: Verifies the branch navigation page loads
+2. **Branch Deployment**: Confirms your branch-specific URL works
+3. **JavaScript Errors**: Detects any console errors or runtime issues
+4. **Essential Elements**: Validates required page elements are present
+
+### Workflow Integration
+- **Automatic Testing**: CI runs deployment tests after each deployment
+- **Failure Handling**: Failed deployment tests will fail the entire workflow
+- **Report Generation**: Creates `deployment-test-report.json` with detailed results
+
+### Manual Verification Steps
+After pushing changes:
+1. **Wait**: Give GitHub Pages 2-3 minutes to update
+2. **Test**: Run `make test-deployment` 
+3. **Verify**: Check URLs manually if tests fail
+4. **Debug**: Review `deployment-test-report.json` for specific issues
+
+### Troubleshooting Failed Deployments
+- **404 Errors**: GitHub Pages deployment may not be complete yet
+- **JavaScript Errors**: Check browser console for specific error messages
+- **Missing Elements**: Verify your build includes all required assets
+- **Network Issues**: Temporary connectivity problems may cause false negatives
 
 ---
 

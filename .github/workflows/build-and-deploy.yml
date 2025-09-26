@@ -2,9 +2,9 @@ name: Build and Deploy Rhythm Runner
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ '*' ]  # Deploy all branches
   pull_request:
-    branches: [ main ]
+    branches: [ '*' ]  # Deploy PR builds
 
 jobs:
   test:
@@ -47,7 +47,8 @@ jobs:
     name: Deploy to GitHub Pages
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # Deploy on pushes to any branch and on pull requests
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     
     steps:
     - name: Checkout code
@@ -62,17 +63,86 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
+    - name: Extract branch name
+      shell: bash
+      run: |
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
+        else
+          echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+        fi
+        echo "Deploying branch: $BRANCH_NAME"
+    
     - name: Build for production
       run: npm run build
       env:
         NODE_ENV: production
+        GITHUB_REF_NAME: ${{ env.BRANCH_NAME }}
+    
+    - name: Create deployment structure
+      run: |
+        mkdir -p deploy
+        
+        # Copy branch-specific build to its subfolder
+        mkdir -p "deploy/${{ env.BRANCH_NAME }}"
+        cp -r dist/* "deploy/${{ env.BRANCH_NAME }}/"
+        
+        # Create/update root index page with branch links
+        cp branch-index.html deploy/index.html
+        
+        echo "📁 Deployment structure created:"
+        echo "├── index.html (branch listing)"
+        echo "└── ${{ env.BRANCH_NAME }}/ (branch deployment)"
+        
+        # Show deployed URLs
+        echo ""
+        echo "🔗 Deployment URLs:"
+        echo "Branch Index: https://clickstefan.github.io/flow-buster/"
+        echo "Current Branch: https://clickstefan.github.io/flow-buster/${{ env.BRANCH_NAME }}/"
     
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
+        publish_dir: ./deploy
+        keep_files: true  # Keep other branch deployments
+        destination_dir: ./
         # cname: rhythm-runner.example.com # Uncomment and update with your domain
+    
+    - name: Wait for deployment to propagate
+      run: |
+        echo "⏳ Waiting for GitHub Pages deployment to propagate..."
+        sleep 60
+    
+    - name: Test deployment links
+      run: |
+        echo "🔗 Testing deployment links..."
+        npm run test:deployment
+      env:
+        BRANCH_NAME: ${{ env.BRANCH_NAME }}
+    
+    - name: Comment deployment URLs
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const branchName = '${{ env.BRANCH_NAME }}';
+          const comment = `## 🚀 Branch Deployment Ready!
+
+          Your branch has been automatically deployed to GitHub Pages:
+
+          **🔗 Branch URL:** https://clickstefan.github.io/flow-buster/${branchName}/
+
+          **📋 All Deployments:** https://clickstefan.github.io/flow-buster/
+
+          Changes will be automatically updated when you push new commits to this branch.`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
 
   build-mobile:
     name: Mobile Build Preparation
