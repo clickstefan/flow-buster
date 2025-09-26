@@ -82,6 +82,12 @@ export class ObstacleManager extends Phaser.Events.EventEmitter {
   }
 
   private spawnObstacle(beatNumber: number): void {
+    // Check if camera is available
+    if (!this.scene.cameras || !this.scene.cameras.main) {
+      console.warn('ObstacleManager: Camera not available yet, skipping obstacle spawn');
+      return;
+    }
+
     const { width } = this.scene.cameras.main;
     
     // Choose random platform (could be more sophisticated based on music analysis)
@@ -132,6 +138,12 @@ export class ObstacleManager extends Phaser.Events.EventEmitter {
   }
 
   private spawnCollectible(_beatNumber: number): void {
+    // Check if camera is available
+    if (!this.scene.cameras || !this.scene.cameras.main) {
+      console.warn('ObstacleManager: Camera not available yet, skipping collectible spawn');
+      return;
+    }
+
     const { width } = this.scene.cameras.main;
     
     // Spawn collectibles between platforms
